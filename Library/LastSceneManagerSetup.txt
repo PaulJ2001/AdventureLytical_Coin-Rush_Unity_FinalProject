@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Lvl3/SceneLvl3.unity
+- path: Assets/Lvl1/Scenes/SceneLvl1-DESKTOP-9VCF7CV.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

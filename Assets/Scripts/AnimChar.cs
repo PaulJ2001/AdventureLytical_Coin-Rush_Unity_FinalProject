@@ -21,7 +21,14 @@ public class AnimChar : MonoBehaviour
     private BoxCollider2D boxCollider2d;
     private Rigidbody2D rigidbody2d;
 
-    
+    public int health;
+    public int numOfHearts;
+
+    public Image[] hearts;
+    public Sprite full_heart;
+    public Sprite empty_heart;
+
+
 
     float velocity;
 
@@ -35,7 +42,7 @@ public class AnimChar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>();    
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -48,18 +55,48 @@ public class AnimChar : MonoBehaviour
 
         animator.SetBool("is_walking", walking);
 
-        if(walking)
+        if (walking)
         {
             animator.SetFloat("input_x", input_x);
 
             transform.Translate(new Vector3(input_x, 0, 0).normalized * Time.deltaTime * 2f * MainCharSpeed);
         }
 
+        //GROUND RELATED
         if (IsGrounded() && Input.GetKeyDown(KeyCode.Space))
         {
 
             //rigidbody2d.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Impulse);
             rigidbody2d.velocity = Vector2.up * jumpSpeed;
+        }
+
+
+        //HEALTH RELATED
+        if (health > numOfHearts)
+        {
+            health = numOfHearts;
+        }
+
+
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if (i < health)
+            {
+                hearts[i].sprite = full_heart;
+            }
+            else
+            {
+                hearts[i].sprite = empty_heart;
+            }
+
+            if (i < numOfHearts)
+            {
+                hearts[i].enabled = true;
+            }
+            else
+            {
+                hearts[i].enabled = false;
+            }
         }
     }
 
@@ -67,7 +104,7 @@ public class AnimChar : MonoBehaviour
     private bool IsGrounded()
     {
         float extraHeigthText = .5f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f,  Vector2.down, extraHeigthText, platformLayerMask);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeigthText, platformLayerMask);
 
         /*
         Color rayColor;
@@ -91,28 +128,62 @@ public class AnimChar : MonoBehaviour
     {
         if (hit.transform.tag == "Spikes")
         {
+            health--;
+        }
+        if (hit.transform.tag == "Spikes" && health == 0)
+        {
             SceneManager.LoadScene("SceneL1GameOver");
         }
+        if (hit.transform.tag == "RipSpikes")
+        {
+            SceneManager.LoadScene("SceneL1GameOver");
+        }
+
+
 
         if (hit.transform.tag == "RareItem")
         {
             SceneManager.LoadScene("SceneL1Victory");
         }
 
+
+
         if (hit.transform.tag == "SpikesLvl2")
+        {
+            health--;
+        }
+        if (hit.transform.tag == "SpikesLvl2" && health == 0)
         {
             SceneManager.LoadScene("SceneL2GameOver");
         }
+        if (hit.transform.tag == "RipSpikesLvl2")
+        {
+            SceneManager.LoadScene("SceneL2GameOver");
+        }
+
+
 
         if (hit.transform.tag == "RareItemLvl2")
         {
             SceneManager.LoadScene("SceneL2Victory");
         }
 
+
+
         if (hit.transform.tag == "SpikesLvl3")
+        {
+            health--;
+        }
+        if (hit.transform.tag == "SpikesLvl3" && health == 0)
         {
             SceneManager.LoadScene("SceneL3GameOver");
         }
+        if (hit.transform.tag == "RipSpikesLvl3")
+        {
+            SceneManager.LoadScene("SceneL3GameOver");
+        }
+
+
 
         if (hit.transform.tag == "RareItemLvl3")
         {
